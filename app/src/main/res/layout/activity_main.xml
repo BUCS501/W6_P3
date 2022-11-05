@@ -10,10 +10,14 @@
     tools:context="com.example.sse.customlistview_sse.MainActivity">
 
     <ListView
+        android:descendantFocusability="blocksDescendants"
         android:id="@+id/lvEpisodes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:fastScrollAlwaysVisible="false" />
+
+
+
 </RelativeLayout>

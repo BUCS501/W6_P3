@@ -4,39 +4,39 @@
 
     <item
         android:id="@+id/mnu_zero"
-        android:title="Menu0"
+        android:title="Merchandise"
         android:icon ="@drawable/ic_local_florist_black_24dp"
-        app:showAsAction="ifRoom">
+        app:showAsAction="never">
     </item>
 
 
     <item
         android:id="@+id/mnu_one"
-        android:title="Menu1"
+        android:title="Nuclear Wessels"
         android:icon ="@drawable/ic_card_giftcard_black_24dp"
-        app:showAsAction="ifRoom">
+        app:showAsAction="never">
     </item>
 
 
     <item
         android:id="@+id/mnu_two"
-        android:title="Menu2"
+        android:title="Phasers on Stun"
         android:icon ="@drawable/kirk_spock1"
-        app:showAsAction="ifRoom">
+        app:showAsAction="never">
     </item>
 
     <item
         android:id="@+id/mnu_three"
-        android:title="Menu3"
+        android:title="Live Long and Prosper"
         android:icon ="@drawable/ic_brightness_3_black_24dp"
-        app:showAsAction="ifRoom">
+        app:showAsAction="never">
     </item>
 
     <item
         android:id="@+id/mnu_four"
-        android:title="Menu4"
+        android:title="Kahn!!!"
         android:icon ="@drawable/ic_local_florist_black_24dp"
-        app:showAsAction="ifRoom">
+        app:showAsAction="never">
     </item>
 
 
