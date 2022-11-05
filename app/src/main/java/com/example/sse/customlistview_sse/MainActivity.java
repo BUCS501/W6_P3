@@ -1,11 +1,10 @@
 package com.example.sse.customlistview_sse;
 
 import android.content.Context;
-<<<<<<< HEAD
 import android.content.Intent;
-=======
+
 import android.content.SharedPreferences;
->>>>>>> ecbfc7c85078304d1689ab34b5e4bc2d94bbdd4f
+
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -47,15 +46,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-<<<<<<< HEAD
+
         episodeURLs = getResources().getStringArray(R.array.urls);
         lvEpisodes = (ListView) findViewById(R.id.lvEpisodes);
         lvAdapter = new MyCustomAdapter(this.getBaseContext());//instead of passing the boring default string adapter, let's pass our own, see class MyCustomAdapter below!
-=======
+
 
         lvEpisodes = (ListView) findViewById(R.id.lvEpisodes);
         lvAdapter = new MyCustomAdapter(this.getBaseContext());  //instead of passing the boring default string adapter, let's pass our own, see class MyCustomAdapter below!
->>>>>>> ecbfc7c85078304d1689ab34b5e4bc2d94bbdd4f
+
         lvEpisodes.setAdapter(lvAdapter);
         lvEpisodes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -102,17 +101,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (id == R.id.mnu_three) {
-<<<<<<< HEAD
 
-=======
             Toast.makeText(getBaseContext(), "Hangup it's a telemarketer.", Toast.LENGTH_LONG).show();
->>>>>>> ecbfc7c85078304d1689ab34b5e4bc2d94bbdd4f
+
             return true;
         }
 
         return super.onOptionsItemSelected(item);  //if none of the above are true, do the default and return a boolean.
-<<<<<<< HEAD
-=======
+
     }
 
     @Override
@@ -140,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         // we need to commit to apply those changes made,
         // otherwise, it will throw an error
         myEdit.commit();
->>>>>>> ecbfc7c85078304d1689ab34b5e4bc2d94bbdd4f
+
     }
 }
 
@@ -181,20 +177,17 @@ class MyCustomAdapter extends BaseAdapter {
     String episodeDescriptions[];  //the "better" way is to encapsulate the list items into an object, then create an arraylist of objects.
     //     int episodeImages[];         //this approach is fine for now.
     ArrayList<Integer> episodeImages;  //Well, we can use one arrayList too...  Just mixing it up here, Arrays or Templated ArrayLists, you choose.
-<<<<<<< HEAD
 
-=======
->>>>>>> ecbfc7c85078304d1689ab34b5e4bc2d94bbdd4f
 //    ArrayList<String> episodes;
 //    ArrayList<String> episodeDescriptions;
     HashMap<Integer, Float> episodeRatings = new HashMap<Integer, Float>();
 
-<<<<<<< HEAD
+
 //    Button btnRandom;
-=======
+
     Button btnRandom;
     RatingBar episodeRating;
->>>>>>> ecbfc7c85078304d1689ab34b5e4bc2d94bbdd4f
+
     Context context;   //Creating a reference to our context object, so we only have to get it once.  Context enables access to application specific resources.
     // Eg, spawning & receiving intents, locating the various managers.
 
@@ -243,13 +236,11 @@ class MyCustomAdapter extends BaseAdapter {
         return position;  //Another call we aren't using, but have to do something since we had to implement (base is abstract).
     }
 
-<<<<<<< HEAD
-=======
+
     public HashMap<Integer,Float> getRatings() {
         return episodeRatings;
     }
 
->>>>>>> ecbfc7c85078304d1689ab34b5e4bc2d94bbdd4f
     //THIS IS WHERE THE ACTION HAPPENS.  getView(..) is how each row gets rendered.
 //STEP 5: Easy as A-B-C
     @Override
@@ -281,7 +272,6 @@ class MyCustomAdapter extends BaseAdapter {
         tvEpisodeDescription.setText(episodeDescriptions[position]);
         imgEpisode.setImageResource(episodeImages.get(position).intValue());
 
-<<<<<<< HEAD
 //        btnRandom = (Button) row.findViewById(R.id.btnRandom);
 //        final String randomMsg = ((Integer) position).toString() + ": " + episodeDescriptions[position];
 //        btnRandom.setOnClickListener(new View.OnClickListener() {
@@ -290,7 +280,7 @@ class MyCustomAdapter extends BaseAdapter {
 //                Toast.makeText(context, randomMsg, Toast.LENGTH_LONG).show();
 //            }
 //        });
-=======
+
         SharedPreferences prefs = context.getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         episodeRating.setRating(prefs.getFloat(String.format("rating_%d", position), 0));
 
@@ -301,15 +291,14 @@ class MyCustomAdapter extends BaseAdapter {
             }
         });
 
-        btnRandom = (Button) row.findViewById(R.id.btnRandom);
-        final String randomMsg = ((Integer) position).toString() + ": " + episodeDescriptions[position];
-        btnRandom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, randomMsg, Toast.LENGTH_LONG).show();
-            }
-        });
->>>>>>> ecbfc7c85078304d1689ab34b5e4bc2d94bbdd4f
+//        btnRandom = (Button) row.findViewById(R.id.btnRandom);
+//        final String randomMsg = ((Integer) position).toString() + ": " + episodeDescriptions[position];
+//        btnRandom.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(context, randomMsg, Toast.LENGTH_LONG).show();
+//            }
+//        });
 
 //STEP 5c: That's it, the row has been inflated and filled with data, return it.
         return row;  //once the row is fully constructed, return it.  Hey whatif we had buttons, can we target onClick Events within the rows, yep!
