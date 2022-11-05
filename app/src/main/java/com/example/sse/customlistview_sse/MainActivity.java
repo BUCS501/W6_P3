@@ -1,5 +1,6 @@
 package com.example.sse.customlistview_sse;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 
@@ -24,6 +25,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.MediaController;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -102,8 +104,22 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.mnu_three) {
 
-            Toast.makeText(getBaseContext(), "Hangup it's a telemarketer.", Toast.LENGTH_LONG).show();
+            MediaPlayer music = MediaPlayer.create(getBaseContext(), R.raw.prosper);
+            music.start();
 
+            return true;
+        }
+
+        if (id == R.id.mnu_four) {
+            try {
+                String newVideoPath = "android.resource://" + getPackageName() + "/" + R.raw.khan;
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(newVideoPath));
+                intent.setDataAndType(Uri.parse(newVideoPath), "video/mp4");
+                startActivity(intent);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(getBaseContext(), "App to play video not found", Toast.LENGTH_LONG).show();
+            }
+            //Toast.makeText(getBaseContext(), "Hangup it's a telemarketer.", Toast.LENGTH_LONG).show();
             return true;
         }
 
