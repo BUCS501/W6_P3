@@ -1,6 +1,7 @@
 package com.example.sse.customlistview_sse;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,12 +18,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        lvEpisodes = (ListView)findViewById(R.id.lvEpisodes);
+        lvEpisodes = (ListView) findViewById(R.id.lvEpisodes);
         lvAdapter = new MyCustomAdapter(this.getBaseContext());  //instead of passing the boring default string adapter, let's pass our own, see class MyCustomAdapter below!
         lvEpisodes.setAdapter(lvAdapter);
 
@@ -68,11 +71,38 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (id == R.id.mnu_three) {
-             Toast.makeText(getBaseContext(), "Hangup it's a telemarketer.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), "Hangup it's a telemarketer.", Toast.LENGTH_LONG).show();
             return true;
         }
 
-            return super.onOptionsItemSelected(item);  //if none of the above are true, do the default and return a boolean.
+        return super.onOptionsItemSelected(item);  //if none of the above are true, do the default and return a boolean.
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Storing data into SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPref", MODE_PRIVATE);
+
+        // Creating an Editor object to edit(write to the file)
+        SharedPreferences.Editor myEdit = sharedPreferences.edit();
+
+        // getRatings from the adapter
+        HashMap<Integer, Float> ratings = ((MyCustomAdapter) lvAdapter).getRatings();
+        // Store each episodes rating in the shared preferences file.
+        // iterate through keys of ratings
+        for (Integer key : ratings.keySet()) {
+            myEdit.putFloat(String.format("rating_%d", key), ratings.get(key));
+        }
+
+        // Storing the key and its value as the data fetched from edittext
+        // myEdit.putString("name", "text");
+        // myEdit.putInt("age", 0);
+
+        // Once the changes have been made,
+        // we need to commit to apply those changes made,
+        // otherwise, it will throw an error
+        myEdit.commit();
     }
 }
 
@@ -109,25 +139,26 @@ public class MainActivity extends AppCompatActivity {
 class MyCustomAdapter extends BaseAdapter {
 
     private
-     String episodes[];             //Keeping it simple.  Using Parallel arrays is the introductory way to store the List data.
-     String  episodeDescriptions[];  //the "better" way is to encapsulate the list items into an object, then create an arraylist of objects.
-//     int episodeImages[];         //this approach is fine for now.
-     ArrayList<Integer> episodeImages;  //Well, we can use one arrayList too...  Just mixing it up here, Arrays or Templated ArrayLists, you choose.
-
+    String episodes[];             //Keeping it simple.  Using Parallel arrays is the introductory way to store the List data.
+    String episodeDescriptions[];  //the "better" way is to encapsulate the list items into an object, then create an arraylist of objects.
+    //     int episodeImages[];         //this approach is fine for now.
+    ArrayList<Integer> episodeImages;  //Well, we can use one arrayList too...  Just mixing it up here, Arrays or Templated ArrayLists, you choose.
 //    ArrayList<String> episodes;
 //    ArrayList<String> episodeDescriptions;
+    HashMap<Integer, Float> episodeRatings = new HashMap<Integer, Float>();
 
     Button btnRandom;
+    RatingBar episodeRating;
     Context context;   //Creating a reference to our context object, so we only have to get it once.  Context enables access to application specific resources.
-                       // Eg, spawning & receiving intents, locating the various managers.
+    // Eg, spawning & receiving intents, locating the various managers.
 
-//STEP 2: Override the Constructor, be sure to:
+    //STEP 2: Override the Constructor, be sure to:
     // grab the context, we will need it later, the callback gets it as a parm.
     // load the strings and images into object references.
     public MyCustomAdapter(Context aContext) {
 //initializing our data in the constructor.
         context = aContext;  //saving the context we'll need it again.
-        episodes =aContext.getResources().getStringArray(R.array.episodes);  //retrieving list of episodes predefined in strings-array "episodes" in strings.xml
+        episodes = aContext.getResources().getStringArray(R.array.episodes);  //retrieving list of episodes predefined in strings-array "episodes" in strings.xml
         episodeDescriptions = aContext.getResources().getStringArray(R.array.episode_descriptions);
 
 //This is how you would do it if you were using an ArrayList, leaving code here for reference, though we could use it instead of the above.
@@ -145,16 +176,16 @@ class MyCustomAdapter extends BaseAdapter {
         episodeImages.add(R.drawable.st_the_trouble_with_tribbles__kirk_tribbles);
     }
 
-//STEP 3: Override and implement getCount(..),
+    //STEP 3: Override and implement getCount(..),
 // ListView uses this to determine how many rows to render.
     @Override
     public int getCount() {
 //        return episodes.size(); //all of the arrays are same length, so return length of any... ick!  But ok for now. :)
         return episodes.length;   //all of the arrays are same length, so return length of any... ick!  But ok for now. :)
-                                  //Q: How else could we have done this (better)? ________________
+        //Q: How else could we have done this (better)? ________________
     }
 
-//STEP 4: Override getItem/getItemId, we aren't using these, but we must override anyway.
+    //STEP 4: Override getItem/getItemId, we aren't using these, but we must override anyway.
     @Override
     public Object getItem(int position) {
 //        return episodes.get(position);  //In Case you want to use an ArrayList
@@ -166,7 +197,11 @@ class MyCustomAdapter extends BaseAdapter {
         return position;  //Another call we aren't using, but have to do something since we had to implement (base is abstract).
     }
 
-//THIS IS WHERE THE ACTION HAPPENS.  getView(..) is how each row gets rendered.
+    public HashMap<Integer,Float> getRatings() {
+        return episodeRatings;
+    }
+
+    //THIS IS WHERE THE ACTION HAPPENS.  getView(..) is how each row gets rendered.
 //STEP 5: Easy as A-B-C
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -180,12 +215,10 @@ class MyCustomAdapter extends BaseAdapter {
 //        row = inflater.inflate(R.layout.listview_row, parent, false);  //
 
 //// Let's optimize a bit by checking to see if we need to inflate, or if it's already been inflated...
-        if (convertView == null){  //indicates this is the first time we are creating this row.
+        if (convertView == null) {  //indicates this is the first time we are creating this row.
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);  //Inflater's are awesome, they convert xml to Java Objects!
             row = inflater.inflate(R.layout.listview_row, parent, false);
-        }
-        else
-        {
+        } else {
             row = convertView;
         }
 
@@ -193,13 +226,24 @@ class MyCustomAdapter extends BaseAdapter {
         ImageView imgEpisode = (ImageView) row.findViewById(R.id.imgEpisode);  //Q: Notice we prefixed findViewByID with row, why?  A: Row, is the container.
         TextView tvEpisodeTitle = (TextView) row.findViewById(R.id.tvEpisodeTitle);
         TextView tvEpisodeDescription = (TextView) row.findViewById(R.id.tvEpisodeDescription);
+        episodeRating = (RatingBar) row.findViewById(R.id.rbEpisode);
 
         tvEpisodeTitle.setText(episodes[position]);
         tvEpisodeDescription.setText(episodeDescriptions[position]);
         imgEpisode.setImageResource(episodeImages.get(position).intValue());
 
+        SharedPreferences prefs = context.getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        episodeRating.setRating(prefs.getFloat(String.format("rating_%d", position), 0));
+
+        episodeRating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                episodeRatings.put(position, rating);
+            }
+        });
+
         btnRandom = (Button) row.findViewById(R.id.btnRandom);
-        final String randomMsg = ((Integer)position).toString() +": "+ episodeDescriptions[position];
+        final String randomMsg = ((Integer) position).toString() + ": " + episodeDescriptions[position];
         btnRandom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -212,7 +256,6 @@ class MyCustomAdapter extends BaseAdapter {
 //return convertView;
 
     }
-
 
 
     ///Helper method to get the drawables...///
